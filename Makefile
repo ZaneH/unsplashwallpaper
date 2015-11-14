@@ -1,5 +1,3 @@
-GO_EASY_ON_ME = 1
-
 ARCHS = armv7 armv7s arm64
 
 TARGET = iphone:clang:latest:8.0
@@ -13,7 +11,7 @@ UnsplashWallpaper_CFLAGS = -fobjc-arc
 UnsplashWallpaper_LDFLAGS = -lactivator
 UnsplashWallpaper_FILES = UnsplashWallpaper.xm Reachability.m
 UnsplashWallpaper_FRAMEWORKS = Foundation UIKit SystemConfiguration
-UnsplashWallpaper_PRIVATE_FRAMEWORKS = PhotoLibrary
+UnsplashWallpaper_PRIVATE_FRAMEWORKS = PhotoLibrary AppSupport
 UnsplashWallpaper_LIBRARIES = activator
 
 include $(THEOS_MAKE_PATH)/tweak.mk
