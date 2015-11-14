@@ -149,15 +149,16 @@ extern "C" CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, in
 @implementation SaveWallpaperListener
 // one of the methods defined in the protocol
 - (void)activator:(LAActivator *)activator receiveEvent:(LAEvent *)event {
-	UIAlertView *askWhatToSaveAlertView = [[UIAlertView alloc] initWithTitle:@"Select Wallpaper" message:@"Which wallpaper do you want to save?" delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:@"Lockscreen", @"Homescreen", @"Both", nil];
-	[askWhatToSaveAlertView show];
-
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Select Wallpaper" message:@"Which wallpaper do you want to save?" delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:@"Lockscreen", @"Homescreen", @"Both", nil];
+	[alert setCancelButtonIndex:3];
+	[alert show];
 	// tells activator we've handled the user event, and no further action is required
 	[event setHandled:YES];
 }
 
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-	if (buttonIndex = 0) {
+	if (buttonIndex == 0) {
 		NSLog(@"Lockscreen");
 	} else if (buttonIndex == 1) {
 		NSData *homeWallpaperData = [NSData dataWithContentsOfFile:@"/var/mobile/Library/SpringBoard/HomeBackground.cpbitmap"];
@@ -165,6 +166,8 @@ extern "C" CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, in
 		NSArray *imageArray = (__bridge NSArray *)CPBitmapCreateImagesFromData(homeWallpaperDataRef, nil, 1, nil);
 		UIImage *homeWallpaper = [UIImage imageWithCGImage:(CGImageRef)imageArray[0]];
 		UIImageWriteToSavedPhotosAlbum(homeWallpaper, nil, nil, nil);
+	} else if (buttonIndex == 2) {
+		NSLog(@"Both");
 	}
 }
 
