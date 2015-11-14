@@ -1,0 +1,10 @@
+{
+    entry = {
+	bundle = UnsplashWallpaper;
+	cell = PSLinkCell;
+	detail = UnsplashWallpaperListController;
+	icon = UnsplashWallpaper.png;
+	isController = 1;
+	label = UnsplashWallpaper;
+    };
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Settings</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>default</key>
+			<string>both</string>
+			<key>defaults</key>
+			<string>com.zanehelton.unsplashwallpaper</string>
+			<key>validValues</key>
+			<array>
+				<string>both</string>
+				<string>home</string>
+				<string>lock</string>
+			</array>
+			<key>validTitles</key>
+			<array>
+				<string>Both</string>
+				<string>Home</string>
+				<string>Lock</string>
+			</array>
+			<key>shortTitles</key>
+			<array>
+				<string>Both</string>
+				<string>Home</string>
+				<string>Lock</string>
+			</array>
+			<key>key</key>
+			<string>wallmode</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>UnsplashWallpaper</string>
+</dict>
+</plist>

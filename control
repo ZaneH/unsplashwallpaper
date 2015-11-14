@@ -1,0 +1,8 @@
+Package: com.zanehelton.unsplashwallpaper
+Name: UnsplashWallpaper
+Depends: mobilesubstrate, firmware (>= 8.0)
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome Cydia Substrate tweak!
+Author: Zane Helton
+Section: Tweaks
