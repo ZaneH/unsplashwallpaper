@@ -1,6 +1,6 @@
 Package: com.zanehelton.unsplashwallpaper
 Name: UnsplashWallpaper
-Depends: mobilesubstrate, firmware (>= 8.0), activator
+Depends: mobilesubstrate, firmware (>= 8.0), libactivator
 Version: 1.0.0
 Architecture: iphoneos-arm
 Description: Set your wallpaper to a random photo from Unsplash.com to fit your iOS device with a simple Activator event.
