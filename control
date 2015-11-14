@@ -4,5 +4,6 @@ Depends: mobilesubstrate, firmware (>= 8.0), libactivator
 Version: 1.0.0
 Architecture: iphoneos-arm
 Description: Set your wallpaper to a random photo from Unsplash.com to fit your iOS device with a simple Activator event.
-Author: Zane Helton
+Maintainer: Zane Helton <zane99@me.com>
+Author: Zane Helton <zane99@me.com>
 Section: Tweaks
