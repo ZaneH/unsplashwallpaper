@@ -14,8 +14,15 @@
 	if (_specifiers == nil) {
 		_specifiers = [self loadSpecifiersFromPlistName:@"UnsplashWallpaper" target:self];
 	}
-    
 	return _specifiers;
+}
+
+- (void)openGithub {
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.github.com/ZaneH/unsplashwallpaper"]];
+}
+
+- (void)openTwitter {
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.twitter.com/ZaneHelton"]];
 }
 
 @end
