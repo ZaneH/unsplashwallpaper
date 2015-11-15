@@ -2,7 +2,7 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = UnsplashWallpaper
 UnsplashWallpaper_CFLAGS = -fobjc-arc
-UnsplashWallpaper_FILES = UnsplashWallpaper.xm Reachability.m
+UnsplashWallpaper_FILES = Listener.xm Reachability.m
 UnsplashWallpaper_FRAMEWORKS = Foundation UIKit SystemConfiguration
 UnsplashWallpaper_PRIVATE_FRAMEWORKS = PhotoLibrary AppSupport
 UnsplashWallpaper_LIBRARIES = activator

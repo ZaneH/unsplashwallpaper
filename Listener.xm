@@ -3,10 +3,10 @@
 #import "Reachability.h"
 #import <substrate.h>
 
-#define CHANGEWALLPAPER_ID @"com.zanehelton.changewallpaper"
-#define SAVEWALLPAPER_ID @"com.zanehelton.savewallpaper"
+#define CHANGEWALLPAPER_ID @"com.zanehelton.unsplashwallpaper.changewallpaper"
+#define SAVEWALLPAPER_ID @"com.zanehelton.unsplashwallpaper.savewallpaper"
 
-@interface UnsplashWallpaperListener : NSObject <LAListener> {
+@interface UnsplashWallpaperListener : NSObject <LAListener, UIAlertViewDelegate> {
 	BOOL _isVisible;
 	NSString *_bundleID;
 }
@@ -68,19 +68,12 @@ static LAActivator *sharedActivatorIfExists(void) {
 
 - (id)init {
 	if ((self = [super init])) {
-		_bundleID = @"com.zanehelton.unsplashwallpaper.listener";
 		// Register our listener
 		LAActivator *_LASharedActivator = sharedActivatorIfExists();
 		if (_LASharedActivator) {
-			if (![_LASharedActivator hasSeenListenerWithName:_bundleID]) {
-				// assign a default event for the listener
-				[_LASharedActivator assignEvent:[objc_getClass("LAEvent") eventWithName:@"libactivator.volume.both.press"] toListenerWithName:_bundleID];
-				// If this listener should supply more than one `listener', assign more default events for more names
-			}
 			if (_LASharedActivator.isRunningInsideSpringBoard) {
-				// Register the listener
-				[_LASharedActivator registerListener:self forName:_bundleID];
-				// If this listener should supply more than one `listener', register more names for `self'
+				[_LASharedActivator registerListener:self forName:CHANGEWALLPAPER_ID];
+				[_LASharedActivator registerListener:self forName:SAVEWALLPAPER_ID];
 			}
 		}
 	}
@@ -91,10 +84,10 @@ static LAActivator *sharedActivatorIfExists(void) {
 	LAActivator *_LASharedActivator = sharedActivatorIfExists();
 	if (_LASharedActivator) {
 		if (_LASharedActivator.runningInsideSpringBoard) {
-			[_LASharedActivator unregisterListenerWithName:_bundleID];
+			[_LASharedActivator unregisterListenerWithName:CHANGEWALLPAPER_ID];
+			[_LASharedActivator unregisterListenerWithName:SAVEWALLPAPER_ID];
 		}
 	}
-	[super dealloc];
 }
 
 #pragma mark - Listener custom methods
@@ -135,7 +128,7 @@ static LAActivator *sharedActivatorIfExists(void) {
 		NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
 		if (networkStatus == NotReachable) {
 			// user is not connected to the internet, make them aware of it
-			[[[UIAlertView alloc] initWithTitle:@"Whoops!" message:@"Please ensure you're connected to the Internet to use UnsplashWallpaper." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil] show];
+			[[[UIAlertView alloc] initWithTitle:@"Whoops!" message:@"Please ensure you're connected to the Internet to use UnsplashWallpaper." delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:nil] show];
 			[event setHandled:YES];
 			return;
 		}
@@ -178,12 +171,8 @@ static LAActivator *sharedActivatorIfExists(void) {
 			}
 		}];
 	} else if ([listenerName isEqualToString:SAVEWALLPAPER_ID]) {
-		NSData *homeWallpaperData = [NSData dataWithContentsOfFile:@"/var/mobile/Library/SpringBoard/HomeBackground.cpbitmap"];
-		CFDataRef homeWallpaperDataRef = (__bridge CFDataRef)homeWallpaperData;
-		HBLogDebug(@"%@", homeWallpaperDataRef);
-		NSArray *imageArray = (__bridge NSArray *)CPBitmapCreateImagesFromData(homeWallpaperDataRef, NULL, 1, NULL);
-		UIImage *homeWallpaper = [UIImage imageWithCGImage:(CGImageRef)imageArray[0]];
-		UIImageWriteToSavedPhotosAlbum(homeWallpaper, nil, nil, nil);
+		UIAlertView *askWhichWallpaper = [[UIAlertView alloc] initWithTitle:@"Select Wallpaper" message:@"Which wallpaper do you want to save?" delegate:self cancelButtonTitle:@"Nevermind" otherButtonTitles:@"Lockscreen", @"Homescreen", @"Both", nil];
+		[askWhichWallpaper show];
 	}
 
 	if ([self presentOrDismiss]) {
@@ -191,20 +180,69 @@ static LAActivator *sharedActivatorIfExists(void) {
 	}
 }
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+	if (buttonIndex == 1) {
+		// save the lockscreen wallpaper
+		NSData *homeWallpaperData = [NSData dataWithContentsOfFile:@"/var/mobile/Library/SpringBoard/LockBackground.cpbitmap"];
+		// do a bunch of low level stuff that I don't even want to talk about
+		CFDataRef homeWallpaperDataRef = (__bridge CFDataRef)homeWallpaperData;
+		NSArray *imageArray = (__bridge NSArray *)CPBitmapCreateImagesFromData(homeWallpaperDataRef, NULL, 1, NULL);
+		UIImage *homeWallpaper = [UIImage imageWithCGImage:(CGImageRef)imageArray[0]];
+		UIImageWriteToSavedPhotosAlbum(homeWallpaper, nil, nil, nil);
+		//CFRelease(homeWallpaperDataRef);
+	} else if (buttonIndex == 2) {
+		// save the homescreen wallpaper
+		NSData *homeWallpaperData = [NSData dataWithContentsOfFile:@"/var/mobile/Library/SpringBoard/HomeBackground.cpbitmap"];
+		if (!homeWallpaperData) {
+			// the homescreen uses the lockscreen wallpaper if they're the same, this essentially checks if they're the same, and then uses the lockscreen
+			// wallpaper if they are
+			homeWallpaperData = [NSData dataWithContentsOfFile:@"/var/mobile/Library/SpringBoard/LockBackground.cpbitmap"];
+		}
+		// do a bunch of low level stuff that I don't even want to talk about
+		CFDataRef homeWallpaperDataRef = (__bridge CFDataRef)homeWallpaperData;
+		NSArray *imageArray = (__bridge NSArray *)CPBitmapCreateImagesFromData(homeWallpaperDataRef, NULL, 1, NULL);
+		UIImage *homeWallpaper = [UIImage imageWithCGImage:(CGImageRef)imageArray[0]];
+		UIImageWriteToSavedPhotosAlbum(homeWallpaper, nil, nil, nil);
+	} else if (buttonIndex == 3) {
+		// save the homescreen wallpaper
+		BOOL sameWallpaper = NO;
+		NSData *homeWallpaperData = [NSData dataWithContentsOfFile:@"/var/mobile/Library/SpringBoard/HomeBackground.cpbitmap"];
+		if (!homeWallpaperData) {
+			// the homescreen uses the lockscreen wallpaper if they're the same, this essentially checks if they're the same, and then uses the lockscreen
+			// wallpaper if they are
+			sameWallpaper = YES;
+			homeWallpaperData = [NSData dataWithContentsOfFile:@"/var/mobile/Library/SpringBoard/LockBackground.cpbitmap"];
+		}
+		// do a bunch of low level stuff that I don't even want to talk about
+		CFDataRef homeWallpaperDataRef = (__bridge CFDataRef)homeWallpaperData;
+		NSArray *imageArray = (__bridge NSArray *)CPBitmapCreateImagesFromData(homeWallpaperDataRef, NULL, 1, NULL);
+		UIImage *homeWallpaper = [UIImage imageWithCGImage:(CGImageRef)imageArray[0]];
+		UIImageWriteToSavedPhotosAlbum(homeWallpaper, nil, nil, nil);
+		if (!sameWallpaper) {
+			homeWallpaperData = [NSData dataWithContentsOfFile:@"/var/mobile/Library/SpringBoard/LockBackground.cpbitmap"];
+			CFDataRef homeWallpaperDataRef = (__bridge CFDataRef)homeWallpaperData;
+			NSArray *imageArray = (__bridge NSArray *)CPBitmapCreateImagesFromData(homeWallpaperDataRef, NULL, 1, NULL);
+			UIImage *homeWallpaper = [UIImage imageWithCGImage:(CGImageRef)imageArray[0]];
+			UIImageWriteToSavedPhotosAlbum(homeWallpaper, nil, nil, nil);
+			return;
+		}
+	}
+}
+
 #pragma mark - Metadata (may be cached)
 
 - (NSString *)activator:(LAActivator *)activator requiresLocalizedTitleForListenerName:(NSString *)listenerName {
 	if ([listenerName isEqualToString:CHANGEWALLPAPER_ID])
-		return @"Change wallpaper to image from Unsplash";
+		return @"Change Wallpaper";
 	else
-		return @"Save current wallpaper to photos";
+		return @"Save Wallpaper";
 }
 
 - (NSString *)activator:(LAActivator *)activator requiresLocalizedDescriptionForListenerName:(NSString *)listenerName {
 	if ([listenerName isEqualToString:CHANGEWALLPAPER_ID])
-		return @"Change Wallpaper";
+		return @"Change wallpaper to image from Unsplash";
 	else
-		return @"Save Wallpaper";
+		return @"Save current wallpaper to photos";
 }
 
 - (NSString *)activator:(LAActivator *)activator requiresLocalizedGroupForListenerName:(NSString *)listenerName {
@@ -223,14 +261,6 @@ static LAActivator *sharedActivatorIfExists(void) {
 	} else {
 		return [NSData dataWithContentsOfFile:@"/Library/PreferenceBundles/UnsplashWallpaper.bundle/UnsplashWallpaper.png"];
 	}
-}
-
-#pragma mark - Configuration view controller
-
-// These methods require a subclass of LAListenerConfigurationViewController to exist
-- (NSString *)activator:(LAActivator *)activator requiresConfigurationViewControllerClassNameForListenerWithName:(NSString *)listenerName bundle:(NSBundle **)outBundle {
-	*outBundle = [NSBundle bundleWithPath:@"/Library/PreferenceBundles/UnsplashWallpaperbundle/UnsplashWallpaper.plist"];
-	return nil;
 }
 
 @end
