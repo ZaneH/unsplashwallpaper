@@ -12,6 +12,18 @@
 		</dict>
 		<dict>
 			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.zanehelton.unsplashwallpaper</string>
+			<key>key</key>
+			<string>savetophotos</string>
+			<key>label</key>
+			<string>Save to Photos</string>
+		</dict>
+		<dict>
+			<key>cell</key>
 			<string>PSSegmentCell</string>
 			<key>default</key>
 			<string>both</string>
@@ -37,6 +49,12 @@
 			</array>
 			<key>key</key>
 			<string>wallmode</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>© 2015 Zane Helton</string>
 		</dict>
 	</array>
 	<key>title</key>
