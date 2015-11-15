@@ -4,7 +4,7 @@
 #import <substrate.h>
 
 #define CHANGEWALLPAPER_ID @"com.zanehelton.changewallpaper"
-#define SAVEWALLPAPER_ID @"com.zanehelton.changewallpaper"
+#define SAVEWALLPAPER_ID @"com.zanehelton.savewallpaper"
 
 @interface UnsplashWallpaperListener : NSObject <LAListener> {
 	BOOL _isVisible;
