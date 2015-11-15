@@ -1,9 +1,4 @@
-export ARCHS = armv7 arm64
-export TARGET = iphone:clang:latest:8.0
-
-THEOS_BUILD_DIR = Packages
-
-include theos/makefiles/common.mk
+include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = UnsplashWallpaper
 UnsplashWallpaper_CFLAGS = -fobjc-arc
@@ -14,8 +9,14 @@ UnsplashWallpaper_LIBRARIES = activator
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 
+internal-stage::
+	#Filter plist
+	$(ECHO_NOTHING)if [ -f Filter.plist ]; then mkdir -p $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries/; cp Filter.plist $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries/UnsplashWallpaper.plist; fi$(ECHO_END)
+	#PreferenceLoader plist
+	$(ECHO_NOTHING)if [ -f Preferences.plist ]; then mkdir -p $(THEOS_STAGING_DIR)/Library/PreferenceLoader/Preferences/UnsplashWallpaper; cp Preferences.plist $(THEOS_STAGING_DIR)/Library/PreferenceLoader/Preferences/UnsplashWallpaper/; fi$(ECHO_END)
+
 after-install::
-	install.exec "killall -9 backboardd"
+	install.exec "killall -9 SpringBoard"
 
 SUBPROJECTS += unsplashwallpaper
 include $(THEOS_MAKE_PATH)/aggregate.mk
