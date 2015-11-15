@@ -1,7 +1,7 @@
 /*
  Copyright (C) 2015 Apple Inc. All Rights Reserved.
  See LICENSE.txt for this sample’s licensing information
- 
+
  Abstract:
  Basic demonstration of how to use the SystemConfiguration Reachablity APIs.
  */
@@ -113,7 +113,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 	bzero(&zeroAddress, sizeof(zeroAddress));
 	zeroAddress.sin_len = sizeof(zeroAddress);
 	zeroAddress.sin_family = AF_INET;
-    
+
 	return [self reachabilityWithAddress:&zeroAddress];
 }
 
@@ -133,7 +133,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 	{
 		returnValue->_alwaysReturnLocalWiFiStatus = YES;
 	}
-    
+
 	return returnValue;
 }
 
@@ -152,7 +152,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 			returnValue = YES;
 		}
 	}
-    
+
 	return returnValue;
 }
 
@@ -187,7 +187,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 	{
 		returnValue = ReachableViaWiFi;
 	}
-    
+
 	return returnValue;
 }
 
@@ -234,7 +234,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
          */
 		returnValue = ReachableViaWWAN;
 	}
-    
+
 	return returnValue;
 }
 
@@ -258,7 +258,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 	NSAssert(_reachabilityRef != NULL, @"currentNetworkStatus called with NULL SCNetworkReachabilityRef");
 	NetworkStatus returnValue = NotReachable;
 	SCNetworkReachabilityFlags flags;
-    
+
 	if (SCNetworkReachabilityGetFlags(_reachabilityRef, &flags))
 	{
 		if (_alwaysReturnLocalWiFiStatus)
@@ -270,7 +270,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 			returnValue = [self networkStatusForFlags:flags];
 		}
 	}
-    
+
 	return returnValue;
 }
 

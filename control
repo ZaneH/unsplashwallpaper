@@ -1,10 +1,10 @@
 Package: com.zanehelton.unsplashwallpaper
 Name: UnsplashWallpaper
-Description: A simple listener for the libactivator API!
-Version: 0.0.1
+Description: Set your wallpaper to a random photo from Unsplash.com to fit your iOS device with an Activator action.
+Version: 1.1.0
 Priority: optional
 Section: Addons (Activator)
 Architecture: iphoneos-arm
 Depends: mobilesubstrate, libactivator
-Maintainer: Zane Helton
-Author: Zane Helton
+Maintainer: Zane Helton <zane99@me.com>
+Author: Zane Helton <zane99@me.com>
